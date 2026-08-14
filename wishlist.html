@@ -1,53 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Birthday Wishlist — peanutman180-max</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="background-embed.css">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<div class="site-background" aria-hidden="true"></div>
-<div class="site-vignette" aria-hidden="true"></div>
-
-<div class="card wishlist-page">
-  <a href="index.html" class="back-btn">← Back to profile</a>
-
-  <div class="wishlist-header">
-    <h1>🎂 Birthday Wishlist</h1>
-    <p class="wishlist-subtitle">Pick a list below — each button opens in a new tab</p>
-  </div>
-
-  <div class="separator"></div>
-
-  <div id="wishlist-links" class="wishlist-links"></div>
-</div>
-
-<script src="wishlist-config.js"></script>
-<script>
-  const container = document.getElementById('wishlist-links');
-
-  WISHLIST_ITEMS.forEach((item) => {
-    const link = document.createElement('a');
-    link.href = item.url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.className = 'wishlist-link-btn';
-
-    link.innerHTML = `
-      <span class="wishlist-link-icon">${item.icon || '🎁'}</span>
-      <span class="wishlist-link-text">
-        <span class="wishlist-link-label">${item.label}</span>
-        <span class="wishlist-link-hint">Click to open →</span>
-      </span>
-    `;
-
-    container.appendChild(link);
-  });
-</script>
-
-</body>
-</html>
+const WISHLIST_ITEMS = [
+  {
+    label: "gravity falls book",
+    url: "https://books.disney.com/book/the-art-of-gravity-falls/"
+  },
+  {
+    label: "guitar",
+    url: "https://www.amazon.de/Fender-Squier-Mini-Stratocaster-Dakota/dp/B085G462HT"
+  }
+];
