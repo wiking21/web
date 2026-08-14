@@ -1,0 +1,383 @@
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --accent: #64c8ff;
+    --accent2: #a78bfa;
+    --discord: #5865F2;
+    --tiktok: #010101;
+    --card-bg: rgba(10, 10, 20, 0.15);
+    --card-border: rgba(100, 200, 255, 0.15);
+    --text-primary: #f0f0ff;
+    --text-muted: rgba(180, 190, 220, 0.6);
+}
+
+html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #020408;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+}
+
+/* ── Starfield Canvas ── */
+#starCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+}
+
+/* ── Card ── */
+.card {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: min(420px, 92vw);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 36px 32px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+        0 0 0 1px rgba(100, 200, 255, 0.06),
+        0 24px 80px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(100, 200, 255, 0.04) inset;
+    animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translate(-50%, calc(-50% + 24px)); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* ── Profile Picture ── */
+.profile-frame {
+    position: relative;
+    width: 100px; height: 100px;
+    margin-bottom: 18px;
+    animation: fadeUp 0.6s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.glow-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        var(--accent), var(--accent2), #f472b6, var(--accent), var(--accent2), var(--accent)
+    );
+    animation: spinRing 4s linear infinite;
+    z-index: 0;
+}
+
+@keyframes spinRing {
+    to { transform: rotate(360deg); }
+}
+
+.pfp {
+    position: relative;
+    z-index: 1;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #020408;
+    display: block;
+}
+
+/* ── Name & Status ── */
+.name-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    animation: fadeUp 0.6s 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(100, 200, 255, 0.08);
+    border: 1px solid rgba(100, 200, 255, 0.18);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px #4ade80; }
+    50% { opacity: 0.6; box-shadow: 0 0 4px #4ade80; }
+}
+
+/* ── Bio ── */
+.bio {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 0.2px;
+    animation: fadeUp 0.6s 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Copy Buttons ── */
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 22px;
+    animation: fadeUp 0.6s 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    width: 100%;
+    text-align: left;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+}
+
+.copy-btn:active { transform: scale(0.98); }
+
+.copy-btn.copied {
+    border-color: rgba(74, 222, 128, 0.3);
+    background: rgba(74, 222, 128, 0.06);
+}
+
+.icon-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+
+.tiktok-icon { background: #010101; border: 1px solid #333; }
+.discord-icon { background: var(--discord); }
+
+.btn-label { flex: 1; }
+
+.btn-platform {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.btn-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+.copy-feedback {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4ade80;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.copy-feedback.show { opacity: 1; }
+
+/* ── Separator ── */
+.separator {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(100, 200, 255, 0.2), transparent);
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Social Pills ── */
+.socials {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.44s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.social-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.social-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.social-pill i { font-size: 15px; }
+
+.discord-pill:hover {
+    background: rgba(88, 101, 242, 0.15);
+    border-color: rgba(88, 101, 242, 0.4);
+    color: #a5b4fc;
+}
+
+/* ── View Count ── */
+.view-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    animation: fadeUp 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Shared Fade-Up ── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #222;
+}
+
+.soundcloud-embed {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.soundcloud-embed:hover {
+  opacity: 1;
+}
+
+@keyframes sparkle-fade {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); color: white; }
+  50%  { opacity: 0.7; transform: translate(-50%, -80%) scale(1.2); color: #a78bfa; }
+  100% { opacity: 0; transform: translate(-50%, -120%) scale(0.5); color: #7c3aed; }
+}
+
+.badge-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+
+.badge {
+  background: #ffffff10;
+  border: 1px solid #ffffff18;
+  color: #ffffffcc;
+  font-size: 0.78rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.quote-box {
+  background: #ffffff08;
+  border-left: 3px solid #a78bfa;
+  color: #ffffff88;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  margin: 4px 0 8px 0;
+  text-align: left;
+}
+
+.gmail-icon {
+  background: #ea4335;
+}
+
+#stars {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    box-shadow:
+        0 0 6px white,
+        0 0 12px #66ccff;
+    cursor: pointer;
+    pointer-events: auto;
+    animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+    from {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+}
