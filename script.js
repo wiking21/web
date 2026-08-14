@@ -10,8 +10,8 @@ const CENTER_Y = () => canvas.height / 2;
 
 let phase = 'gather';
 let phaseTimer = 0;
-let blackHoleRadius = 0;
-let blackHoleOpacity = 0;
+let sunRadius = 0;
+let sunOpacity = 0;
 
 const PHASE_DURATIONS = {
     gather: 320,
@@ -47,17 +47,17 @@ function spawnParticle() {
 
 function randomColor() {
     const colors = [
-        '100, 200, 255',
-        '167, 139, 250',
-        '244, 114, 182',
-        '255, 255, 255',
-        '96, 240, 190',
+        '255, 209, 102',
+        '255, 140, 66',
+        '255, 107, 157',
+        '255, 248, 240',
+        '78, 205, 196',
+        '255, 107, 53',
     ];
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function resetParticleToScreen(p) {
-    // Give each particle a new random target spot on screen to drift to
     p.targetX = Math.random() * canvas.width;
     p.targetY = Math.random() * canvas.height;
     p.vx = 0; p.vy = 0;
@@ -74,9 +74,8 @@ function update() {
     const progress = phaseTimer / PHASE_DURATIONS[phase];
 
     if (phase === 'gather') {
-        // Black hole grows as particles get sucked in
-        blackHoleRadius = Math.min(blackHoleRadius + 0.4, 55);
-        blackHoleOpacity = Math.min(blackHoleOpacity + 0.015, 1);
+        sunRadius = Math.min(sunRadius + 0.4, 55);
+        sunOpacity = Math.min(sunOpacity + 0.015, 1);
 
         particles.forEach(p => {
             const dx = cx - p.x;
@@ -92,8 +91,8 @@ function update() {
         });
 
     } else if (phase === 'bundle') {
-        blackHoleRadius = Math.min(blackHoleRadius + 0.3, 70);
-        blackHoleOpacity = 1;
+        sunRadius = Math.min(sunRadius + 0.3, 70);
+        sunOpacity = 1;
 
         particles.forEach(p => {
             const dx = cx - p.x;
@@ -107,7 +106,6 @@ function update() {
             p.opacity = Math.min(1, p.opacity + 0.03);
             p.radius = Math.min(p.radius + 0.03, 3.5);
 
-            // Pre-calculate explode targets — fly to random screen positions
             if (phaseTimer === PHASE_DURATIONS.bundle - 1) {
                 p.targetX = Math.random() * canvas.width;
                 p.targetY = Math.random() * canvas.height;
@@ -119,12 +117,10 @@ function update() {
         });
 
     } else if (phase === 'explode') {
-        // Black hole shrinks as particles fly out
-        blackHoleRadius = Math.max(blackHoleRadius - 1.0, 0);
-        blackHoleOpacity = Math.max(blackHoleOpacity - 0.02, 0);
+        sunRadius = Math.max(sunRadius - 1.0, 0);
+        sunOpacity = Math.max(sunOpacity - 0.02, 0);
 
         particles.forEach(p => {
-            // Decelerate as they approach their target
             const dx = p.targetX - p.x;
             const dy = p.targetY - p.y;
             const dist = Math.hypot(dx, dy);
@@ -137,31 +133,26 @@ function update() {
                 p.x += p.vx;
                 p.y += p.vy;
             } else {
-                // Arrived — settle in place
                 p.x = p.targetX;
                 p.y = p.targetY;
                 p.vx = 0; p.vy = 0;
             }
 
-            // Fade back in instead of fading out
             p.opacity = Math.min(0.9, p.opacity + 0.02);
             p.radius = Math.max(0.5, p.radius - 0.02);
         });
 
     } else if (phase === 'rest') {
-        // Particles just sit on screen, gently twinkling
-        blackHoleRadius = 0;
-        blackHoleOpacity = 0;
+        sunRadius = 0;
+        sunOpacity = 0;
 
         particles.forEach(p => {
-            // Subtle random drift while resting
             p.x += (Math.random() - 0.5) * 0.3;
             p.y += (Math.random() - 0.5) * 0.3;
             p.opacity += (Math.random() - 0.5) * 0.02;
             p.opacity = Math.min(0.95, Math.max(0.2, p.opacity));
         });
 
-        // On last rest frame reset targets for next gather
         if (phaseTimer === PHASE_DURATIONS.rest - 1) {
             particles.forEach(p => resetParticleToScreen(p));
         }
@@ -176,38 +167,47 @@ function update() {
     }
 }
 
-function drawBlackHole(cx, cy) {
-    if (blackHoleRadius <= 0 || blackHoleOpacity <= 0) return;
+function drawSun(cx, cy) {
+    if (sunRadius <= 0 || sunOpacity <= 0) return;
 
-    const outerGlow = ctx.createRadialGradient(cx, cy, blackHoleRadius * 0.8, cx, cy, blackHoleRadius * 3.5);
-    outerGlow.addColorStop(0, `rgba(80, 40, 160, ${0.18 * blackHoleOpacity})`);
-    outerGlow.addColorStop(0.4, `rgba(40, 80, 180, ${0.10 * blackHoleOpacity})`);
+    const outerGlow = ctx.createRadialGradient(cx, cy, sunRadius * 0.8, cx, cy, sunRadius * 3.5);
+    outerGlow.addColorStop(0, `rgba(255, 209, 102, ${0.35 * sunOpacity})`);
+    outerGlow.addColorStop(0.4, `rgba(255, 140, 66, ${0.2 * sunOpacity})`);
     outerGlow.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.beginPath();
-    ctx.arc(cx, cy, blackHoleRadius * 3.5, 0, Math.PI * 2);
+    ctx.arc(cx, cy, sunRadius * 3.5, 0, Math.PI * 2);
     ctx.fillStyle = outerGlow;
     ctx.fill();
 
-    const ringGrad = ctx.createRadialGradient(cx, cy, blackHoleRadius * 0.75, cx, cy, blackHoleRadius * 1.6);
-    ringGrad.addColorStop(0,    `rgba(200, 120, 255, ${0.55 * blackHoleOpacity})`);
-    ringGrad.addColorStop(0.35, `rgba(100, 180, 255, ${0.35 * blackHoleOpacity})`);
-    ringGrad.addColorStop(0.7,  `rgba(60,  60,  120, ${0.12 * blackHoleOpacity})`);
+    const ringGrad = ctx.createRadialGradient(cx, cy, sunRadius * 0.75, cx, cy, sunRadius * 1.6);
+    ringGrad.addColorStop(0,    `rgba(255, 248, 200, ${0.7 * sunOpacity})`);
+    ringGrad.addColorStop(0.35, `rgba(255, 180, 80, ${0.45 * sunOpacity})`);
+    ringGrad.addColorStop(0.7,  `rgba(255, 120, 50, ${0.15 * sunOpacity})`);
     ringGrad.addColorStop(1,    'rgba(0,0,0,0)');
     ctx.beginPath();
-    ctx.arc(cx, cy, blackHoleRadius * 1.6, 0, Math.PI * 2);
+    ctx.arc(cx, cy, sunRadius * 1.6, 0, Math.PI * 2);
     ctx.fillStyle = ringGrad;
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, blackHoleRadius, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(0, 0, 0, ${blackHoleOpacity})`;
+    ctx.arc(cx, cy, sunRadius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 200, 80, ${0.85 * sunOpacity})`;
     ctx.fill();
+}
+
+function drawSky() {
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, 'rgba(255, 107, 53, 0.35)');
+    grad.addColorStop(0.35, 'rgba(255, 140, 66, 0.25)');
+    grad.addColorStop(0.65, 'rgba(255, 209, 102, 0.2)');
+    grad.addColorStop(1, 'rgba(78, 205, 196, 0.3)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(2, 4, 8, 1)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawSky();
 
     particles.forEach(p => {
         ctx.beginPath();
@@ -221,12 +221,12 @@ function draw() {
         ctx.fill();
     });
 
-    drawBlackHole(CENTER_X(), CENTER_Y());
+    drawSun(CENTER_X(), CENTER_Y());
 
     if (phase === 'bundle' && phaseTimer > PHASE_DURATIONS.bundle * 0.7) {
         const flashProgress = (phaseTimer - PHASE_DURATIONS.bundle * 0.7) / (PHASE_DURATIONS.bundle * 0.3);
         const gradient = ctx.createRadialGradient(CENTER_X(), CENTER_Y(), 0, CENTER_X(), CENTER_Y(), 80 * flashProgress);
-        gradient.addColorStop(0, `rgba(200, 230, 255, ${0.7 * flashProgress})`);
+        gradient.addColorStop(0, `rgba(255, 240, 180, ${0.6 * flashProgress})`);
         gradient.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -248,8 +248,8 @@ window.addEventListener('resize', () => {
     createParticles();
     phase = 'gather';
     phaseTimer = 0;
-    blackHoleRadius = 0;
-    blackHoleOpacity = 0;
+    sunRadius = 0;
+    sunOpacity = 0;
 });
 
 const card = document.querySelector('.card');
@@ -262,23 +262,22 @@ if (card) {
     });
 }
 
-// SPARKLE TRAIL
 document.addEventListener('mousemove', (e) => {
-  const sparkle = document.createElement('div');
-  sparkle.style.cssText = `
-    position: fixed;
-    left: ${e.clientX}px;
-    top: ${e.clientY}px;
-    width: 8px;
-    height: 8px;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
-    animation: sparkle-fade 0.6s ease forwards;
-    font-size: ${10 + Math.random() * 10}px;
-    line-height: 1;
-  `;
-  sparkle.textContent = ['✦', '✧', '⋆', '★', '🟍'][Math.floor(Math.random() * 5)];
-  document.body.appendChild(sparkle);
-  setTimeout(() => sparkle.remove(), 600);
+    const sparkle = document.createElement('div');
+    sparkle.style.cssText = `
+        position: fixed;
+        left: ${e.clientX}px;
+        top: ${e.clientY}px;
+        width: 8px;
+        height: 8px;
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
+        animation: sparkle-fade 0.6s ease forwards;
+        font-size: ${10 + Math.random() * 10}px;
+        line-height: 1;
+    `;
+    sparkle.textContent = ['☀️', '✨', '🌊', '🍉', '🌴', '☀️'][Math.floor(Math.random() * 6)];
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 600);
 });
