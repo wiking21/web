@@ -5,53 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>peanutman180-max</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a2e0e6ad65.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 </head>
 <body>
+
+<div class="site-background" aria-hidden="true"></div>
+<div class="site-vignette" aria-hidden="true"></div>
 
 <!-- INTRO OVERLAY -->
 <div id="intro-overlay">
   <div id="intro-content">
     <img src="cat.jpeg" id="intro-cat" alt="cat">
     <h1 id="intro-name">peanutman180-max</h1>
-    <p id="intro-hint">☀️ drag to enter my website!</p>
+    <p id="intro-hint">drag to enter &gt;&gt;</p>
   </div>
-  <div id="drag-bar">⠿</div>
+  <div id="drag-bar">||</div>
 </div>
 
-<!-- MAIN PAGE -->
-<canvas id="starCanvas"></canvas>
 <div class="card">
   <div class="profile-frame">
-    <div class="glow-ring"></div>
     <img src="cat.jpeg" class="pfp" alt="peanutman180-max">
   </div>
   <div class="name-block">
     <h1>peanutman180-max</h1>
     <div class="status-badge">
       <span class="status-dot"></span>
-      current season: summer☀️
+      sunset mode
     </div>
   </div>
-  <p class="bio">come on fight me!! my birthday is on the 29th of june! ☀️</p>
+  <p class="bio">come on fight me!! my birthday is on the 29th of june!</p>
 
   <div class="badge-row">
-    <span class="badge">🇩🇪 Germany</span>
-    <span class="badge">🎂 13</span>
-    <span class="badge">🌴 Summer time!</span>
+    <span class="badge">DE Germany</span>
+    <span class="badge">13 y/o</span>
+    <span class="badge">summer lake</span>
   </div>
 
   <div class="quote-box">
-    ☀️ always improving — find me inside coding or on a bike ride!
+  always improving — golden hour vibes
   </div>
 
   <div class="separator"></div>
 
   <div class="socials">
     <a href="wishlist.html" class="social-pill" target="_blank">
-      <span>🎂</span>
       <span>Birthday Wishlist</span>
     </a>
   </div>
@@ -67,10 +65,7 @@
         <div class="btn-platform">TikTok</div>
         <div class="btn-sub">@.cuverp</div>
       </div>
-      <span class="copy-feedback" id="tiktok-feedback">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-        Copied!
-      </span>
+      <span class="copy-feedback" id="tiktok-feedback">Copied!</span>
     </button>
     <button class="copy-btn discord-btn" onclick="copyUser('discord', 'kiskoo_', this)">
       <div class="icon-circle discord-icon">
@@ -82,10 +77,7 @@
         <div class="btn-platform">Discord</div>
         <div class="btn-sub">kiskoo_</div>
       </div>
-      <span class="copy-feedback" id="discord-feedback">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-        Copied!
-      </span>
+      <span class="copy-feedback" id="discord-feedback">Copied!</span>
     </button>
     <button class="copy-btn gmail-btn" onclick="copyUser('gmail', 'peanutman180@gmail.com', this)">
       <div class="icon-circle gmail-icon">
@@ -97,10 +89,7 @@
         <div class="btn-platform">Gmail</div>
         <div class="btn-sub">peanutman180@gmail.com</div>
       </div>
-      <span class="copy-feedback" id="gmail-feedback">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-        Copied!
-      </span>
+      <span class="copy-feedback" id="gmail-feedback">Copied!</span>
     </button>
   </div>
 
@@ -118,19 +107,16 @@
 
   <div class="soundcloud-embed">
     <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
-      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/goyfriendisraelfart/komb-7&color=%23ff8c42&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false">
+      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/goyfriendisraelfart/komb-7&color=%23f5d87a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false">
     </iframe>
   </div>
 
   <div class="view-count">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
     <span id="view-number">0</span> views
   </div>
 </div>
 
-<a href="wishlist.html" class="wishlist-btn">🎂 Birthday Wishlist</a>
-
-<div id="stars"></div>
+<a href="wishlist.html" class="wishlist-btn">Birthday Wishlist</a>
 
 <script src="script.js"></script>
 <script>
@@ -192,25 +178,6 @@
     overlay.style.transform = 'translateX(100%)';
     setTimeout(() => overlay.remove(), 500);
   }
-
-  const starsContainer = document.getElementById('stars');
-
-  function createStar() {
-    const star = document.createElement('div');
-    star.classList.add('star');
-    star.style.left = Math.random() * window.innerWidth + 'px';
-    star.style.top = Math.random() * window.innerHeight + 'px';
-    const size = Math.random() * 4 + 2;
-    star.style.width = size + 'px';
-    star.style.height = size + 'px';
-    star.addEventListener('click', () => {
-      star.remove();
-      createStar();
-    });
-    starsContainer.appendChild(star);
-  }
-
-  for (let i = 0; i < 80; i++) createStar();
 </script>
 
 </body>
